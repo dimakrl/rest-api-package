@@ -11,7 +11,7 @@ class ResourceRequest extends Request {
         DELETE: `${this.apiRoute}/`,
     }
 
-    async request<Body = unknown>(method: HttpMethod, url: string, body?: Body) {
+    async makeRequest<Body = unknown>(method: HttpMethod, url: string, body?: Body) {
         let result
         try {
             result = await this.request(method, url, body)
@@ -28,7 +28,7 @@ class ResourceRequest extends Request {
             this.getExtraQueryParams(query.extra)
         )
 
-        const response = await this.request(
+        const response = await this.makeRequest(
             HttpMethod.GET,
             this.routes.GET + queryString
         )
@@ -48,7 +48,7 @@ class ResourceRequest extends Request {
         const queryString = this.buildQueryString(
             this.getExtraQueryParams(query.extra)
         )
-        const response = await this.request(
+        const response = await this.makeRequest(
             HttpMethod.GET,
             this.routes.FIND + id + queryString
         )
@@ -57,7 +57,7 @@ class ResourceRequest extends Request {
     }
 
     async create<Body = unknown>(body: Body) {
-        const response = await this.request<Body>(
+        const response = await this.makeRequest<Body>(
             HttpMethod.POST,
             this.routes.CREATE,
             body
@@ -70,8 +70,8 @@ class ResourceRequest extends Request {
         id: number,
         body: Body,
         method = HttpMethod.PUT
-    ) {
-        const response = await this.request<Body>(
+    ): Promise<any> {
+        const response = await this.makeRequest<Body>(
             method,
             this.routes.UPDATE + id,
             body
@@ -85,7 +85,7 @@ class ResourceRequest extends Request {
     }
 
     async delete(id: number) {
-        const response = await this.request(
+        const response = await this.makeRequest(
             HttpMethod.DELETE,
             this.routes.DELETE + id
         )

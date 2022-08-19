@@ -4,7 +4,7 @@ import {AxiosHandler, BaseUrlConfig, RequestHandlers} from './types'
 
 abstract class Request {
     protected apiResource: string
-    protected routes: { [x: string]: string }
+    protected abstract routes: { [x: string]: string }
     private readonly baseUrlConfig: BaseUrlConfig;
     private readonly requestHandlers?: RequestHandlers;
     private readonly fetch = axios
@@ -82,8 +82,8 @@ abstract class Request {
         }
 
         if (this.requestHandlers?.responseHandler || this.requestHandlers?.errorsHandler) {
-            const defaultResponseHandler = (res) => res;
-            const defaultErrorHandler = (err) => {
+            const defaultResponseHandler: AxiosHandler<any> = (res) => res;
+            const defaultErrorHandler: AxiosHandler<any> = (err) => {
                 console.error(err)
 
                 return Promise.reject(err.message)
